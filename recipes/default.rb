@@ -76,6 +76,6 @@ template "/etc/init.d/nexus" do
 end
 
 service "nexus" do
-  action :enable, :start
+  action [ :enable, :start ]
   #notifies :restart, "service[nginx]", :immediately
 end
