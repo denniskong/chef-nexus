@@ -100,3 +100,34 @@ service "nexus" do
   action [ :enable, :start ]
   #notifies :restart, "service[nginx]", :immediately
 end
+
+directory "/etc/nginx/certificates" do
+  owner "nginx"
+  group "nginx"
+  mode "700"
+end
+
+bash "Create SSL Certificates" do
+  cwd "/etc/nginx/certificates"
+  code <<-EOH
+  umask 077
+  openssl genrsa 2048 > nexus-proxy.key
+  openssl req -subj "#{node['nexus']['ssl_req']}" -new -x509 -nodes -sha1 -days 3650 -key nexus-proxy.key > nexus-proxy.crt
+  cat nexus-proxy.key nexus-proxy.crt > nexus-proxy.pem
+  EOH
+  not_if { ::File.exists?("/etc/nginx/certificates/nexus-proxy.pem") }
+end
+
+
+template "#{node[:nginx][:dir]}/sites-available/nexus_proxy.conf" do
+  source "nexus_proxy.nginx.conf.erb"
+  owner  "root"
+  group  "root"
+  mode   "0644"
+  variables(
+    :ssl_certificate => "/etc/nginx/certificates/nexus-proxy.crt",
+    :ssl_key         => "/etc/nginx/certificates/nexus-proxy.key",
+  )
+end
+
+nginx_site 'nexus_proxy.conf'
