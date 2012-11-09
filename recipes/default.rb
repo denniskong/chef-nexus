@@ -57,8 +57,9 @@ bash "install_nexus" do
   code <<-EOH
   tar -zxf #{local_nexus_tarball}
   mv #{nexus_folder} #{install_dir}
+  chown -R #{node[:nexus][:user]}:#{node[:nexus][:group]} #{install_dir}
   EOH
-  not_if "test -d /usr/local/nexus"
+  not_if "test -d #{install_dir}"
 end
 
 #TODO link /usr/local/nexus -> only if /usr/local/#{nexus_folder}
