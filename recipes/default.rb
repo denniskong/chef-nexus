@@ -102,9 +102,8 @@ service "nexus" do
 end
 
 directory "/etc/nginx/certificates" do
-  owner "nginx"
-  group "nginx"
-  mode "700"
+  owner "root"
+  group "root"
 end
 
 bash "Create SSL Certificates" do
