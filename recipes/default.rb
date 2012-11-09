@@ -71,6 +71,7 @@ template nexus_properties_file do
   owner node[:nexus][:user]
   group node[:nexus][:group]
   only_if "test -f #{nexus_properties_file}"
+  notifies :restart, "service[nexus]", :immediately
 end
 
 directory pid_dir do
@@ -82,6 +83,7 @@ end
 directory working_dir do
   owner node[:nexus][:user]
   group node[:nexus][:group]
+  recursive true
   action :create
 end
 
