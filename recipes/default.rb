@@ -99,7 +99,7 @@ end
 
 service "nexus" do
   action [ :enable, :start ]
-  #notifies :restart, "service[nginx]", :immediately
+  notifies :restart, "service[nginx]", :immediately
 end
 
 directory "/etc/nginx/certificates" do
@@ -124,6 +124,7 @@ template "#{node[:nginx][:dir]}/sites-available/nexus_proxy.conf" do
   owner  "root"
   group  "root"
   mode   "0644"
+  notifies :restart, "service[nginx]", :immediately
   variables(
     :ssl_certificate => "/etc/nginx/certificates/nexus-proxy.crt",
     :ssl_key         => "/etc/nginx/certificates/nexus-proxy.key"
