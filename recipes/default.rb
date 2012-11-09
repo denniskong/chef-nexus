@@ -41,6 +41,7 @@ group node[:nexus][:group] do
 end
 
 user node[:nexus][:user] do
+  shell  "/bin/bash"
   gid    node[:nexus][:group]
   system true
 end
