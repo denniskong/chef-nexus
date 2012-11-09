@@ -25,7 +25,7 @@
 #
 
 include_recipe "java"
-include_revipe "nginx"
+include_recipe "nginx"
 
 nexus_tarball = node[:nexus][:tarball_url]
 nexus_tarball_basename = ::File.basename(nexus_tarball)
