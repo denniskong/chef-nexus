@@ -24,6 +24,9 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
+include_recipe "java"
+include_revipe "nginx"
+
 nexus_tarball = node[:nexus][:tarball_url]
 nexus_tarball_basename = ::File.basename(nexus_tarball)
 local_nexus_tarball = ::File.join("/tmp", nexus_tarball_basename)
