@@ -43,6 +43,7 @@ group node[:nexus][:group] do
 end
 
 user node[:nexus][:user] do
+  home "/var/lib/#{node[:nexus][:user]}"
   shell  "/bin/bash"
   gid    node[:nexus][:group]
   system true
