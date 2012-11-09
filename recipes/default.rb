@@ -72,6 +72,7 @@ template nexus_properties_file do
   group node[:nexus][:group]
   only_if "test -f #{nexus_properties_file}"
   notifies :restart, "service[nexus]", :immediately
+  variables(:working_dir => working_dir)
 end
 
 directory pid_dir do
