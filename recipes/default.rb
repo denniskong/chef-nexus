@@ -32,7 +32,9 @@ nexus_tarball_basename = ::File.basename(nexus_tarball)
 local_nexus_tarball = ::File.join("/tmp", nexus_tarball_basename)
 nexus_folder = ::File.basename(nexus_tarball_basename, "-bundle.tar.gz")
 install_dir = node[:nexus][:install_dir]
+working_dir = node[:nexus][:working_dir]
 pid_dir = node[:nexus][:pid_dir]
+nexus_properties_file = ::File.join(install_dir,"conf","nexus.properties")
 
 
 
@@ -64,12 +66,24 @@ end
 
 #TODO link /usr/local/nexus -> only if /usr/local/#{nexus_folder}
 
+template nexus_properties_file do
+  source "nexus.properties.erb"
+  owner node[:nexus][:user]
+  group node[:nexus][:group]
+  only_if "test -f #{nexus_properties_file}"
+end
+
 directory pid_dir do
   owner node[:nexus][:user]
   group node[:nexus][:group]
   action :create
 end
 
+directory working_dir do
+  owner node[:nexus][:user]
+  group node[:nexus][:group]
+  action :create
+end
 
 template "/etc/init.d/nexus" do
   mode "0755"
