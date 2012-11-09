@@ -35,7 +35,7 @@ install_dir = node[:nexus][:install_dir]
 working_dir = node[:nexus][:working_dir]
 pid_dir = node[:nexus][:pid_dir]
 nexus_properties_file = ::File.join(install_dir,"conf","nexus.properties")
-
+nexus_jetty_xml = ::File.join(install_dir,"conf","jetty.xml")
 
 
 group node[:nexus][:group] do
@@ -74,6 +74,13 @@ template nexus_properties_file do
   group node[:nexus][:group]
   notifies :restart, "service[nexus]", :immediately
   variables(:working_dir => working_dir)
+end
+
+template nexus_jetty_xml do
+  source "jetty.xml.erb"
+  owner node[:nexus][:user]
+  group node[:nexus][:group]
+  notifies :restart, "service[nexus]", :immediately
 end
 
 directory pid_dir do
