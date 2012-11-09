@@ -47,6 +47,7 @@ end
 
 
 remote_file local_nexus_tarball do
+  source nexus_tarball
   action :create
 end
 
