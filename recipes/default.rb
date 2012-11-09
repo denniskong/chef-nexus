@@ -24,10 +24,24 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-nexus_tarball = "http://www.sonatype.org/downloads/nexus-2.2-01-bundle.tar.gz"
+nexus_tarball = node[:nexus][:tarball_url]
 nexus_tarball_basename = ::File.basename(nexus_tarball)
 local_nexus_tarball = ::File.join("/tmp", nexus_tarball_basename)
 nexus_folder = ::File.basename(nexus_tarball_basename, "-bundle.tar.gz")
+install_dir = node[:nexus][:install_dir]
+pid_dir = node[:nexus][:pid_dir]
+
+
+
+group node[:nexus][:group] do
+  system true
+end
+
+user node[:nexus][:user] do
+  gid    node[:nexus][:group]
+  system true
+end
+
 
 remote_file local_nexus_tarball do
   action :create
@@ -37,9 +51,28 @@ bash "install_nexus" do
   cwd "/tmp"
   code <<-EOH
   tar -zxf #{local_nexus_tarball}
-  mv #{nexus_folder} /usr/lcoal
+  mv #{nexus_folder} #{install_dir}
   EOH
 end
 
 #TODO link /usr/local/nexus -> only if /usr/local/#{nexus_folder}
 
+directory pid_dir do
+  owner node[:nexus][:user]
+  group node[:nexus][:group]
+  action :create
+end
+
+
+template "/etc/init.d/nexus" do
+  mode "0755"
+  variables(:nexus_home => install_dir,
+            :pid_dir => pid_dir,
+            :user => node[:nexus][:user])
+
+end
+
+service "nexus" do
+  action :enable, :start
+  #notifies :restart, "service[nginx]", :immediately
+end

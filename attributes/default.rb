@@ -1,0 +1,5 @@
+default[:nexus][:tarball_url]  = "http://www.sonatype.org/downloads/nexus-2.2-01-bundle.tar.gz"
+default[:nexus][:install_dir]  = "/usr/local/nexus"
+default[:nexus][:user]         = "nexus"
+default[:nexus][:group]        = "nexus"
+defaulr[:nexus][:pid_dir]      = "/var/run/nexus"
