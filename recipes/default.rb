@@ -53,6 +53,7 @@ end
 remote_file local_nexus_tarball do
   source nexus_tarball
   action :create
+  not_if "test -f #{local_nexus_tarball}"
 end
 
 bash "install_nexus" do
