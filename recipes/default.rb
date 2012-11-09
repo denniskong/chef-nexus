@@ -126,7 +126,7 @@ template "#{node[:nginx][:dir]}/sites-available/nexus_proxy.conf" do
   mode   "0644"
   variables(
     :ssl_certificate => "/etc/nginx/certificates/nexus-proxy.crt",
-    :ssl_key         => "/etc/nginx/certificates/nexus-proxy.key",
+    :ssl_key         => "/etc/nginx/certificates/nexus-proxy.key"
   )
 end
 
