@@ -58,6 +58,7 @@ bash "install_nexus" do
   tar -zxf #{local_nexus_tarball}
   mv #{nexus_folder} #{install_dir}
   EOH
+  not_if "test -d /usr/local/nexus"
 end
 
 #TODO link /usr/local/nexus -> only if /usr/local/#{nexus_folder}
